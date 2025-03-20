@@ -1,0 +1,35 @@
+:root {
+  font-family: system-ui, cursive, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: #ffffffde;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Adding background cloud/wave effect */
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(90deg, #F5F5F5, #EEEEEE, #E0E0E0, #BDBDBD, #9E9E9E);
+  background-size: 400% 100%;
+  animation: cloud-wave 15s ease-in-out infinite;
+}
+
+/* Animation for cloud/wave effect */
+@keyframes cloud-wave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

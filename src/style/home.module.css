@@ -1,0 +1,33 @@
+.customCard {
+    border: 2px solid #6a1b9a; /* Dark purple border */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border 0.3s ease-in-out; /* Smooth transition */
+  }
+  
+  .customCard img {
+    height: 200px; /* Set image height */
+    object-fit: cover; /* Ensure the image is properly cropped */
+  }
+  
+  /* Styling for the card text */
+  .customCard .card-body {
+    padding: 1.25rem; /* Larger padding inside the card */
+  }
+  
+  .customCard .card-title {
+    font-size: 1.25rem; /* Font size for the brand */
+    font-weight: 600;
+  }
+  
+  .customCard .card-text {
+    font-size: 1rem; /* Font size for the model */
+    color: #555; /* Softer text color */
+  }
+  
+  /* Hover effect for the hovered card */
+  .hoveredCard {
+    transform: scale(1.05); /* Scale the card on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Larger shadow on hover */
+    border: 2px solid #8e24aa; /* Darker border color on hover */
+  }

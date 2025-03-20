@@ -1,0 +1,11 @@
+.loadingContainer {
+    width: 50%;
+    text-align: center;
+  }
+  
+  .loadingBar {
+    height: 20px;
+    background-color: #A594F9;
+    border-radius: 10px;
+    transition: width 0.1s ease-in-out; /* Smooth transition for the bar */
+  }

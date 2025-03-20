@@ -1,0 +1,45 @@
+/* slider.module.css */
+.customCard {
+    width: 24rem; /* Default width for large screens */
+    margin: 10px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .word-box {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  /* Make the card responsive on smaller screens */
+  @media (max-width: 1200px) {
+    .customCard {
+      width: 22rem; /* Slightly smaller width for medium screens */
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .customCard {
+      width: 18rem; /* Smaller width for tablets */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .customCard {
+      width: 16rem; /* Even smaller width for small screens */
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .customCard {
+      width: 100%; /* Full width for extra small screens */
+      margin: 5px 0; /* Adjust margin for better spacing */
+    }
+  }
+  
+  /* Center the text inside the word-box */
+  .word-box h5 {
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
