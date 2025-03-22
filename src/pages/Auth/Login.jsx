@@ -1,44 +1,71 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { login } from "../../api/Auth";
+import style from "../../style/Login.module.css"; 
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [message, setMessage] = useState("");
+    const [isValid, setIsValid] = useState(false);
+    const navigate = useNavigate(); // Hook untuk navigasi
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Logging in with:", { email, password });
-  };
+    const handleLogin = async (e) => {
+        e.preventDefault();
 
-  return (
-    <div className="container mt-4">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit} className="w-50 mx-auto">
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email</label>
-          <input 
-            type="email" 
-            className="form-control" 
-            id="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
-          />
+        const phoneRegex = /^[0-9]{12}$/;
+        if (!phoneRegex.test(phoneNumber)) {
+            setMessage("Nomor telepon harus 12 digit angka.");
+            setIsValid(false);
+            return;
+        }
+
+        try {
+            const result = await login(phoneNumber);
+
+            if (result.error) {
+                setMessage(result.error);
+                setIsValid(false);
+            } else {
+                setMessage("Kode OTP telah dikirim. Mengalihkan ke verifikasi...");
+                setIsValid(true);
+
+                // Redirect otomatis setelah 1,5 detik ke halaman verify-otp
+                setTimeout(() => navigate(`/verify-otp?phone=${phoneNumber}`), 1500);
+            }
+        } catch (error) {
+            setMessage("Terjadi kesalahan. Silakan coba lagi.");
+            setIsValid(false);
+        }
+    };
+
+    return (
+        <div className={style.container}>
+            <div className={style.card}>
+                <h2 className={style.title}>Login</h2>
+                <form onSubmit={handleLogin}>
+                    <div className="mb-3">
+                        <input
+                            type="text"
+                            className={style.inputField}
+                            placeholder="Phone Number"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <button type="submit" className={style.button}>
+                        Request OTP
+                    </button>
+                </form>
+                {message && <p className={style.message}>{message}</p>}
+
+                <p className={style.registerText}>
+                    Belum punya akun?{" "}
+                    <a href="/register" className={style.registerLink}>Register di sini</a>
+                </p>
+            </div>
         </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">Password</label>
-          <input 
-            type="password" 
-            className="form-control" 
-            id="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
-          />
-        </div>
-        <button type="submit" className="btn btn-primary w-100">Login</button>
-      </form>
-    </div>
-  );
+    );
 };
 
 export default Login;

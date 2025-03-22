@@ -7,6 +7,8 @@ import Login from "./pages/Auth/Login";
 import Home from "./pages/Home/Home";
 import HeaderSlider from "./components/HeaderSlider";
 import LoadingComponent from "./components/LoadingComponent";
+import Register from "./pages/Auth/Register";
+import VerifyOTP from "./pages/Auth/VerifyOTP";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -31,6 +33,8 @@ function App() {
               <Route path="/product" element={<Product />} />
               <Route path="/about" element={<About />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/verify-otp" element={<VerifyOTP />} />
             </Routes>
           </div>
         </Router>
