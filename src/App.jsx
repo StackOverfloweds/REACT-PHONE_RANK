@@ -1,22 +1,45 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Product from "./pages/Product/Product";
 import About from "./pages/About/About";
 import Login from "./pages/Auth/Login";
-import AppHome from "./pages/AppHome";
+import Home from "./pages/Home/Home";
+import HeaderSlider from "./components/HeaderSlider";
+import LoadingComponent from "./components/LoadingComponent";
+import Register from "./pages/Auth/Register";
+import VerifyOTP from "./pages/Auth/VerifyOTP";
+
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate a loading process, then hide the loading component
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+  }, []);
+
   return (
-    <Router>
-      <Navbar />
-      <div className="container mt-4">
-        <Routes>
-          <Route path="/" element={<AppHome />} />
-          <Route path="/product" element={<Product />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </div>
-    </Router>
+    <>
+      {loading ? (
+        <LoadingComponent />
+      ) : (
+        <Router>
+          <Navbar />
+          <div className="container mt-5">
+            <Routes>
+              <Route path="/" element={<><HeaderSlider /><Home /></>} />
+              <Route path="/product" element={<Product />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/verify-otp" element={<VerifyOTP />} />
+            </Routes>
+          </div>
+        </Router>
+      )}
+    </>
   );
 }
 

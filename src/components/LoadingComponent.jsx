@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
-import Home from "./Home/Home";
-import HeaderSlider from "../components/HeaderSlider";
 import style from "../style/LoadingBar.module.css"; // Import CSS module
 
-const AppHome = () => {
+const LoadingComponent = () => {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0); // Track loading progress
 
-  // Simulate a loading time of 3 seconds
   useEffect(() => {
     const interval = 30; // Update progress every 30ms
     const totalSteps = 100; // Total steps to reach 100%
@@ -35,25 +32,17 @@ const AppHome = () => {
           <div className={style.loadingContainer}>
             <div
               className={style.loadingBar}
-              style={{ width: `${progress}%` }} // Dynamically set width based on progress
+              style={{ width: `${progress}%` }}
             ></div>
             <p className="mt-2">{Math.round(progress)}%</p>
           </div>
         </div>
       ) : (
         <>
-          {/* Make for Header */}
-          <div>
-            <HeaderSlider />
-          </div>
-          {/* Make for home with Bootstrap margin-top class */}
-          <div className="mt-5">
-            <Home />
-          </div>
         </>
       )}
     </div>
   );
 };
 
-export default AppHome;
+export default LoadingComponent;
