@@ -1,24 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 import useFetchData from "../../hooks/useFetch";
 import { getSmartphones, getSmartphoneByID } from "../../api/smartphoneAPI";
 import styles from "../../style/product.module.css";
 
 const Product = () => {
+  const navigate = useNavigate();
   const { data: smartphones, error, loading } = useFetchData(getSmartphones);
   const [selectedSmartphone, setSelectedSmartphone] = useState(null);
-  const [showModal, setShowModal] = useState(false); // State untuk modal
+  const [showModal, setShowModal] = useState(false);
   const baseURL = import.meta.env.VITE_API_BASE_URL;
-
+  
   const handleProductClick = async (id) => {
     try {
       const smartphoneData = await getSmartphoneByID(id);
+  
+      if (smartphoneData?.error === "Unauthorized") {
+        navigate("/login"); 
+        return;
+      }
+  
+      console.log("Smartphone Data:", smartphoneData);
+  
+      if (!smartphoneData || !smartphoneData.smartphone) {
+        console.warn("Invalid smartphone data received:", smartphoneData);
+        return;
+      }
+  
       const combinedData = {
         ...smartphoneData.smartphone, 
         image_url: smartphoneData.image_url, 
       };
-      console.log(combinedData)
+  
       setSelectedSmartphone(combinedData);
-      setShowModal(true); 
+      setShowModal(true);
     } catch (err) {
       console.error("Error fetching smartphone details:", err);
     }
@@ -41,14 +56,14 @@ const Product = () => {
   return (
     <div className={`container mt-4 ${styles.container}`}>
       {/* Card untuk Our Products */}
-    <div className="d-flex justify-content-center mb-4">
-      <div className="card shadow-sm p-3" style={{ maxWidth: "400px", backgroundColor: "#fff" }}>
-        <div className="card-body text-center">
-          <h3 className="card-title fw-bold" style={{ color: "#333" }}>Our Products</h3>
-          <p className="card-text text-muted">Explore our latest smartphone collection</p>
+      <div className="d-flex justify-content-center mb-4">
+        <div className="card shadow-sm p-3" style={{ maxWidth: "400px", backgroundColor: "#fff" }}>
+          <div className="card-body text-center">
+            <h3 className="card-title fw-bold" style={{ color: "#333" }}>Our Products</h3>
+            <p className="card-text text-muted">Explore our latest smartphone collection</p>
+          </div>
         </div>
       </div>
-    </div>
 
       <div className="row">
         {smartphones.map((phone) => {

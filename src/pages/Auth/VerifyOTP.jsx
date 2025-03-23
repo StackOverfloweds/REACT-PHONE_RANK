@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { verifyOtp } from "../../api/Auth";
-import style from "../../style/VerifyOTP.module.css"; // Import CSS
+import style from "../../style/VerifyOTP.module.css"; 
 
 const VerifyOTP = () => {
     const [otp, setOtp] = useState("");
     const [message, setMessage] = useState("");
     const location = useLocation();
-    const navigate = useNavigate();
     const phoneNumber = location.state?.phoneNumber;
 
     const handleVerifyOtp = async (e) => {
@@ -18,10 +17,9 @@ const VerifyOTP = () => {
             setMessage(result.error);
         } else {
             setMessage("Login successful!");
-            localStorage.setItem("token", result.token);
             setTimeout(() => {
-                navigate("/"); // Redirect ke halaman Home setelah sukses
-            }, 1000); // Redirect setelah 1 detik
+                window.location.href = "/";
+            }, 1000);
         }
     };
     

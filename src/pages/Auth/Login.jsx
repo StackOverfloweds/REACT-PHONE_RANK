@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom"; 
 import { login } from "../../api/Auth";
 import style from "../../style/Login.module.css"; 
 
@@ -7,7 +7,7 @@ const Login = () => {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [message, setMessage] = useState("");
     const [isValid, setIsValid] = useState(false);
-    const navigate = useNavigate(); // Hook untuk navigasi
+    const navigate = useNavigate(); 
 
     const handleLogin = async (e) => {
         e.preventDefault();

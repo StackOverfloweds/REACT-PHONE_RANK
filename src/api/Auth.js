@@ -1,4 +1,5 @@
 import axiosClient from "./axiosClient";
+import Cookies from "js-cookie";
 
 export const register = async (username, fullName, phone) => {
     try {
@@ -56,8 +57,11 @@ export const login = async (phoneNumber) => {
 export const verifyOtp = async (otp) => {
     try {
         const response = await axiosClient.post("/auth/verify-otp", { otp });
-
-        return response.data; // Mengembalikan token dan peran pengguna
+        Cookies.set(import.meta.env.VITE_API_TOKEN_USR, response.data.token, { expires: 1/24 }); 
+        Cookies.set(import.meta.env.VITE_API_ROLE_USR, response.data.role, { expires: 1/24 });
+        Cookies.set(import.meta.env.VITE_API_NAME_USR, response.data.user_name, { expires: 1/24 });
+        Cookies.set(import.meta.env.VITE_API_ID_USR, response.data.user_id, { expires: 1/24 });
+        return response.data; 
     } catch (error) {
         console.error("Error verifying OTP:", error);
         return { error: error.response?.data || "OTP verification failed" };
@@ -67,11 +71,27 @@ export const verifyOtp = async (otp) => {
 
 export const Logout = async () => {
     try {
-        const response = await axiosClient.post("/auth/logout");
-          
-      } catch (error) {
-        console.error("Error fetching smartphones:", error);
-          return [];
+      const token = Cookies.get(import.meta.env.VITE_API_TOKEN_USR);
+  
+      if (!token) {
+        console.warn("No token found, redirecting to login...");
+        window.location.href = "/login";
+        return null;
       }
-}
-
+  
+      const response = await axiosClient.post("/auth/logout", {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+  
+      Cookies.remove(import.meta.env.VITE_API_NAME_USR);
+      Cookies.remove(import.meta.env.VITE_API_TOKEN_USR);
+      Cookies.remove(import.meta.VITE_API_ROLE_USR);
+      Cookies.remove(import.meta.env.VITE_API_ID_USR);
+  
+      return response; 
+    } catch (error) {
+      console.error("Error during logout:", error);
+      throw error; 
+        }
+  };
+  
