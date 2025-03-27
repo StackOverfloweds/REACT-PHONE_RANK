@@ -34,7 +34,7 @@ const Home = () => {
           const brand = smartphone?.brand?.name || "Brand Not Available";
           const model = smartphone?.model || "Model Not Available";
           const imageSrc = image_url ? `${baseURL}${image_url}` : "/placeholder.jpg"; 
-          const phoneId = smartphone?.id || index; // Ensure unique key if ID is missing
+          const phoneId = smartphone?.id || index; 
 
           return (
             <div

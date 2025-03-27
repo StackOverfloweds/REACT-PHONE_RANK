@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Product from "./pages/Product/Product";
@@ -9,15 +9,32 @@ import HeaderSlider from "./components/HeaderSlider";
 import LoadingComponent from "./components/LoadingComponent";
 import Register from "./pages/Auth/Register";
 import VerifyOTP from "./pages/Auth/VerifyOTP";
+import Searching from "./pages/Searching/Searching";
+import Cookies from "js-cookie";
+
+function ProtectedRoute({ element, condition, redirectTo }) {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!condition) {
+      navigate(redirectTo);
+    }
+  }, [condition, navigate, redirectTo]);
+
+  return condition ? element : null;
+}
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
-    // Simulate a loading process, then hide the loading component
     setTimeout(() => {
       setLoading(false);
     }, 3000);
+    
+    const storedToken = Cookies.get(import.meta.env.VITE_API_TOKEN_USR);
+    setToken(storedToken);
   }, []);
 
   return (
@@ -35,6 +52,10 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/verify-otp" element={<VerifyOTP />} />
+              <Route 
+                path="/searching" 
+                element={<ProtectedRoute element={<Searching />} condition={!!token} redirectTo="/" />} 
+              />
             </Routes>
           </div>
         </Router>
