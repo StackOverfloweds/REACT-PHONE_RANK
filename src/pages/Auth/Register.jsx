@@ -8,8 +8,8 @@ const Register = () => {
     const [fullName, setFullName] = useState("");
     const [phone, setPhone] = useState("");
     const [message, setMessage] = useState("");
-    const [error, setError] = useState(""); // State untuk menyimpan pesan error
-    const [success, setSuccess] = useState(false); // State untuk menampilkan link ke login
+    const [error, setError] = useState(""); 
+    const [success, setSuccess] = useState(false);
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -26,12 +26,14 @@ const Register = () => {
             
             if (result.error) {
                 setError(result.error);
-                setMessage(""); // Reset pesan sukses jika ada error
+                setMessage(""); 
                 setSuccess(false);
             } else {
                 setMessage("Registrasi berhasil! Silakan login.");
-                setError(""); // Reset pesan error jika berhasil
-                setSuccess(true); // Aktifkan link login
+                setError(""); 
+                setSuccess(true);
+                setTimeout(() => navigate("/login"), 1500);
+                
             }
         } catch (err) {
             setError("Terjadi kesalahan. Silakan coba lagi.");
@@ -73,10 +75,10 @@ const Register = () => {
                 </form>
 
                 {/* Menampilkan pesan error jika ada */}
-                {error && <p className={style.error}>{error}</p>}
+                {error && <p className={style.error} style={{ color: "red" }}>{error}</p>}
                 
                 {/* Menampilkan pesan sukses jika berhasil */}
-                {message && <p className={style.success}>{message}</p>}
+                {message && <p className={style.success} style={{ color: "green" }}>{message}</p>}
 
                 {/* Menampilkan link login hanya jika registrasi sukses */}
                 {success && (

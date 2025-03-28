@@ -5,30 +5,38 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { Logout } from "../api/Auth";
 import { NavDropdown } from "react-bootstrap";
+
 const Navbar = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState(null);
+  const [hasToken, setHasToken] = useState(false);
 
   useEffect(() => {
     const storedUsername = Cookies.get(import.meta.env.VITE_API_NAME_USR);
+    const token = Cookies.get(import.meta.env.VITE_API_TOKEN_USR);
+
     if (storedUsername) {
       setUsername(storedUsername);
     }
+
+    // Cek apakah token tersedia
+    setHasToken(!!token);
   }, []);
 
   const handleLogout = async () => {
     try {
-      const response = await Logout(); 
-  
+      const response = await Logout();
+
       if (response && response.status === 200) {
         setUsername(null);
+        setHasToken(false);
         navigate("/login");
       }
     } catch (error) {
       console.error("Logout failed:", error.response ? error.response.data : error.message);
     }
   };
-  
+
   return (
     <nav 
       className="navbar navbar-expand-lg navbar-dark" 
@@ -71,23 +79,30 @@ const Navbar = () => {
             <li className="nav-item">
               <Link className="nav-link" to="/about" style={{ fontWeight: "bold", color: "black" }}>About</Link>
             </li>
-            {username ? (
-          <li className="nav-item dropdown">
-            <NavDropdown 
-              title={<span style={{ fontWeight: "bold", color: "black" }}>{username}</span>} 
-              id="userDropdown"
-              align="end"
-            >
-              <NavDropdown.Item as={Link} to="/profile">Profile</NavDropdown.Item>
-              <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-            </NavDropdown>
-          </li>
-        ) : (
-          <li className="nav-item">
-            <Link className="nav-link" to="/login" style={{ fontWeight: "bold", color: "black" }}>Login</Link>
-          </li>
-        )}
 
+            {/* Tampilkan Searching hanya jika ada token */}
+            {hasToken && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/searching" style={{ fontWeight: "bold", color: "black" }}>Searching</Link>
+              </li>
+            )}
+
+            {username ? (
+              <li className="nav-item dropdown">
+                <NavDropdown 
+                  title={<span style={{ fontWeight: "bold", color: "black" }}>{username}</span>} 
+                  id="userDropdown"
+                  align="end"
+                >
+                  <NavDropdown.Item as={Link} to="/profile">Profile</NavDropdown.Item>
+                  <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+                </NavDropdown>
+              </li>
+            ) : (
+              <li className="nav-item">
+                <Link className="nav-link" to="/login" style={{ fontWeight: "bold", color: "black" }}>Login</Link>
+              </li>
+            )}
           </ul>
         </div>
       </div>
