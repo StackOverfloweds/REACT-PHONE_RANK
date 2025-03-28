@@ -7,36 +7,50 @@ const Login = () => {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [message, setMessage] = useState("");
     const [isValid, setIsValid] = useState(false);
+    const [error, setError] = useState(null); // State untuk menangani error
     const navigate = useNavigate(); 
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
+    
         const phoneRegex = /^[0-9]{12}$/;
         if (!phoneRegex.test(phoneNumber)) {
             setMessage("Nomor telepon harus 12 digit angka.");
             setIsValid(false);
             return;
         }
-
+    
         try {
             const result = await login(phoneNumber);
-
+    
             if (result.error) {
-                setMessage(result.error);
+                console.error("Login Error:", result.error);
+    
+                // Perbaiki cara menangani error
+                setError(result.error.error || JSON.stringify(result.error));
                 setIsValid(false);
             } else {
                 setMessage("Kode OTP telah dikirim. Mengalihkan ke verifikasi...");
                 setIsValid(true);
-
-                // Redirect otomatis setelah 1,5 detik ke halaman verify-otp
+    
+                // Redirect setelah 1,5 detik
                 setTimeout(() => navigate(`/verify-otp?phone=${phoneNumber}`), 1500);
             }
-        } catch (error) {
-            setMessage("Terjadi kesalahan. Silakan coba lagi.");
+        } catch (err) {
+            console.error("Login Error:", err);
+    
+            let errorMsg = "Terjadi kesalahan. Silakan coba lagi.";
+            if (err.response) {
+                errorMsg = err.response.data?.error || "Terjadi kesalahan pada server.";
+            } else if (err.request) {
+                errorMsg = "Gagal terhubung ke server. Periksa koneksi internet Anda.";
+            }
+    
+            setError(errorMsg);
             setIsValid(false);
         }
     };
+    
 
     return (
         <div className={style.container}>
@@ -57,7 +71,9 @@ const Login = () => {
                         Request OTP
                     </button>
                 </form>
-                {message && <p className={style.message}>{message}</p>}
+
+                {message && <p className={style.message} style={{ color: "green" }}>{message}</p>}
+                {error && <p className={style.message} style={{ color: "red" }}>{error}</p>}
 
                 <p className={style.registerText}>
                     Belum punya akun?{" "}
