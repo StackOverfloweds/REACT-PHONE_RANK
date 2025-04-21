@@ -9,6 +9,7 @@ const VerifyOTP = () => {
     const location = useLocation();
     const phoneNumber = location.state?.phoneNumber;
 
+
     const handleVerifyOtp = async (e) => {
         e.preventDefault();
         const result = await verifyOtp(otp);
@@ -17,11 +18,17 @@ const VerifyOTP = () => {
             setMessage(result.error);
         } else {
             setMessage("Login successful!");
+            
             setTimeout(() => {
-                window.location.href = "/";
+                if (result.role === "admin") {
+                    window.location.href = "/admin/dashboard";
+                } else {
+                    window.location.href = "/";
+                }
             }, 1000);
         }
     };
+    
     
 
     return (
