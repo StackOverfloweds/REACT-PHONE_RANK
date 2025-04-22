@@ -30,7 +30,7 @@ const Navbar = () => {
       if (response && response.status === 200) {
         setUsername(null);
         setHasToken(false);
-        navigate("/login");
+        window.location.href = "/login";
       }
     } catch (error) {
       console.error("Logout failed:", error.response ? error.response.data : error.message);
@@ -94,7 +94,6 @@ const Navbar = () => {
                   id="userDropdown"
                   align="end"
                 >
-                  <NavDropdown.Item as={Link} to="/profile">Profile</NavDropdown.Item>
                   <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
                 </NavDropdown>
               </li>

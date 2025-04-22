@@ -69,3 +69,25 @@ export const deleteSmartphone = async (id) => {
     return { error: error.response?.data || "Failed to delete smartphone" };
   }
 };
+
+
+export const searchSmartphones = async (data) => {
+  try {
+    const token = Cookies.get(import.meta.env.VITE_API_TOKEN_USR);
+    if (!token) {
+      console.warn("No authorization token found");
+      return { error: "Unauthorized" };
+    }
+
+    const response = await axiosClient.post('/admin/phone/search', data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error creating smartphone:", error);
+    return { error: error.response?.data || "Failed to create smartphone" };
+  }
+};

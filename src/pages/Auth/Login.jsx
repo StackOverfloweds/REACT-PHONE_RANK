@@ -13,12 +13,13 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
     
-        const phoneRegex = /^[0-9]{12}$/;
+        const phoneRegex = /^[0-9]{11,12}$/;
         if (!phoneRegex.test(phoneNumber)) {
-            setMessage("Nomor telepon harus 12 digit angka.");
+            setMessage("Nomor telepon harus 11 atau 12 digit angka.");
             setIsValid(false);
             return;
         }
+
     
         try {
             const result = await login(phoneNumber);

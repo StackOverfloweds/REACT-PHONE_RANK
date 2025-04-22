@@ -2,6 +2,10 @@ import { useState } from "react";
 import { createSmartphone } from "../../../api/admin";
 
 const CreateSmartphone = () => {
+  const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  
   const [form, setForm] = useState({
     brand: { name: "" },
     display: {
@@ -35,7 +39,38 @@ const CreateSmartphone = () => {
     os: "",
     extended_memory_available: false,
   });
-
+  
+  const validateForm = () => {
+    const newErrors = {};
+  
+    if (!form.model) newErrors.model = "Model is required.";
+    if (!form.brand.name) newErrors["brand.name"] = "Brand is required.";
+    if (!form.price || isNaN(form.price)) newErrors.price = "Valid price is required.";
+    if (!form.avg_rating || isNaN(form.avg_rating)) newErrors.avg_rating = "Valid rating is required.";
+  
+    if (!form.processor.brand) newErrors["processor.brand"] = "Processor brand is required.";
+    if (!form.processor.model) newErrors["processor.model"] = "Processor model is required.";
+    if (!form.processor.num_cores) newErrors["processor.num_cores"] = "Number of cores is required.";
+    if (!form.processor.speed) newErrors["processor.speed"] = "Processor speed is required.";
+  
+    if (!form.display.screen_size) newErrors["display.screen_size"] = "Screen size is required.";
+    if (!form.display.refresh_rate) newErrors["display.refresh_rate"] = "Refresh rate is required.";
+  
+    if (!form.battery.capacity) newErrors["battery.capacity"] = "Battery capacity is required.";
+    if (form.battery.fast_charging_available && !form.battery.fast_charging)
+      newErrors["battery.fast_charging"] = "Fast charging (Watt) is required.";
+  
+    if (!form.camera.num_rear_cameras) newErrors["camera.num_rear_cameras"] = "Rear camera count is required.";
+  
+    if (!form.ram_capacity) newErrors.ram_capacity = "RAM is required.";
+    if (!form.internal_memory) newErrors.internal_memory = "Internal memory is required.";
+    if (!form.os) newErrors.os = "Operating system is required.";
+  
+    setErrors(newErrors);
+  
+    return Object.keys(newErrors).length === 0;
+  };
+  
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -67,6 +102,11 @@ const CreateSmartphone = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      alert("Please fix the form errors.");
+      return;
+    }
 
     // Parsing numbers
     const parsedForm = {
@@ -104,25 +144,28 @@ const CreateSmartphone = () => {
 
     try {
       const response = await createSmartphone(parsedForm);
-      console.log("res ", response)
-      // Check if the response is successful
       if (response) {
-        window.location.href = "/admin/dashboard";
+        setSuccessMessage("Smartphone successfully added!");
+        setErrorMessage(""); // reset error
+        setTimeout(() => {
+          window.location.href = "/admin/dashboard";
+        }, 2000); // redirect after 2 seconds
       } else {
-        console.error("Failed to add smartphone:", response);
-        alert("Failed to add smartphone. Please check the data sent.");
+        setErrorMessage("Failed to add smartphone. Please check the data sent.");
+        setSuccessMessage(""); // reset success
       }
     } catch (err) {
       console.error("Error sending data:", err);
-      alert("An error occurred. Please check the log for details.");
-    }
+      setErrorMessage("An error occurred. Please check the log for details.");
+      setSuccessMessage(""); // reset success
+    }    
   };
 
   return (
     <div className="container mt-4">
       <h2>Add New Smartphone</h2>
       <form onSubmit={handleSubmit}>
-        {/* Basic Info */}
+  
         <input
           className="form-control my-2"
           name="model"
@@ -322,7 +365,17 @@ const CreateSmartphone = () => {
           />
           <label className="form-check-label">Is 5G</label>
         </div>
+        {successMessage && (
+        <div className="alert alert-success" role="alert">
+          {successMessage}
+        </div>
+      )}
 
+      {errorMessage && (
+        <div className="alert alert-danger" role="alert">
+          {errorMessage}
+        </div>
+      )}
         <button type="submit" className="btn btn-primary">Create</button>
       </form>
     </div>

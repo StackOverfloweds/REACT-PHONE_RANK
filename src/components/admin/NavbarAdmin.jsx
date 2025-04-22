@@ -30,7 +30,7 @@ const NavbarAdmin = () => {
         Cookies.remove(import.meta.VITE_API_ROLE_USR);
         setAdminName(null);
         setHasToken(false);
-        navigate("/login");
+        window.location.href = "/login";
       }
     } catch (error) {
       console.error("Logout failed:", error.response ? error.response.data : error.message);
@@ -92,14 +92,8 @@ const NavbarAdmin = () => {
                 </NavDropdown.Item>
               </NavDropdown>
             </li>
-
             <li className="nav-item">
-              <Link className="nav-link" to="/admin/users" style={{ fontWeight: "bold", color: "black" }}>
-                Manage Users
-              </Link>
-            </li>
-            <li className="nav-item">
-                <Link className="nav-link" onClick={handleLogout} to="/login" style={{ fontWeight: "bold", color: "black" }}>
+                <Link className="nav-link" onClick={handleLogout} style={{ fontWeight: "bold", color: "black" }}>
                   Logout
                 </Link>
               </li>

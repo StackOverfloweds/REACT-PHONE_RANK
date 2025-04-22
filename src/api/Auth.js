@@ -58,9 +58,10 @@ export const verifyOtp = async (otp) => {
     try {
         const response = await axiosClient.post("/auth/verify-otp", { otp });
         Cookies.set(import.meta.env.VITE_API_TOKEN_USR, response.data.token, { expires: 1/24 }); 
-        Cookies.set(import.meta.env.VITE_API_ROLE_USR, response.data.role, { expires: 1/24 });
         Cookies.set(import.meta.env.VITE_API_NAME_USR, response.data.user_name, { expires: 1/24 });
         Cookies.set(import.meta.env.VITE_API_ID_USR, response.data.user_id, { expires: 1/24 });
+
+        sessionStorage.setItem(import.meta.env.VITE_API_ROLE_USR, response.data.role)
         return response.data; 
     } catch (error) {
         console.error("Error verifying OTP:", error);
@@ -85,9 +86,9 @@ export const Logout = async () => {
   
       Cookies.remove(import.meta.env.VITE_API_NAME_USR);
       Cookies.remove(import.meta.env.VITE_API_TOKEN_USR);
-      Cookies.remove(import.meta.VITE_API_ROLE_USR);
       Cookies.remove(import.meta.env.VITE_API_ID_USR);
-  
+      
+      sessionStorage.removeItem(import.meta.VITE_API_ROLE_USR)
       return response; 
     } catch (error) {
       console.error("Error during logout:", error);

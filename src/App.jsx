@@ -31,7 +31,7 @@ function ProtectedRoute({ element, condition, redirectTo }) {
 function App() {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(null);
-  const [role, setRole] = useState("user"); // default user
+  const [role, setRole] = useState(null); // default null agar bisa deteksi absence
 
   useEffect(() => {
     setTimeout(() => {
@@ -39,12 +39,13 @@ function App() {
     }, 3000);
 
     const storedToken = Cookies.get(import.meta.env.VITE_API_TOKEN_USR);
-    const storedRole = Cookies.get(import.meta.env.VITE_API_ROLE_USR);
+    const storedRole = sessionStorage.getItem(import.meta.env.VITE_API_ROLE_USR);
+    
     setToken(storedToken);
-    if (storedRole) setRole(storedRole);
+    setRole(storedRole);
   }, []);
 
-  const isAdmin = role === "admin";
+  const isAdmin = token && role === "admin"; // ✅ Hanya true jika dua-duanya benar
 
   return (
     <>
@@ -52,6 +53,7 @@ function App() {
         <LoadingComponent />
       ) : (
         <Router>
+          {/* ✅ Navbar hanya akan jadi Admin jika token & role sesuai */}
           {isAdmin ? <NavbarAdmin /> : <Navbar />}
           <div className="container mt-5">
             <Routes>
@@ -71,17 +73,15 @@ function App() {
                 path="/admin/dashboard" 
                 element={<ProtectedRoute element={<DashboardAdmin />} condition={isAdmin} redirectTo="/" />} 
               />
-            <Route 
-              path="/admin/phones/create" 
-              element={<ProtectedRoute element={<CreateSmartphone />} condition={isAdmin} redirectTo="/" />} 
-            />
-            <Route 
-              path="/admin/phones/view" 
-              element={<ProtectedRoute element={<ViewSmartphones />} condition={isAdmin} redirectTo="/" />} 
-            />
-
+              <Route 
+                path="/admin/phones/create" 
+                element={<ProtectedRoute element={<CreateSmartphone />} condition={isAdmin} redirectTo="/" />} 
+              />
+              <Route 
+                path="/admin/phones/view" 
+                element={<ProtectedRoute element={<ViewSmartphones />} condition={isAdmin} redirectTo="/" />} 
+              />
             </Routes>
-            {/* 📱 Route CRUD untuk Phones */}
           </div>
         </Router>
       )}
